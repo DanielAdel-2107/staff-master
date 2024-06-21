@@ -5,22 +5,52 @@ import 'package:projflut/controller/add_property_controller.dart';
 import 'package:projflut/controller/get_property_controller.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-// void main() {
-//   runApp(MyApp());
-// }
 
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Real Estate Assessor',
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       home: AssessorPage(),
-//     );
-//   }
-// }
+import 'package:flutter/material.dart';
+
+import 'package:flutter/material.dart';
+
+class PropertyDetailPage extends StatelessWidget {
+  final List<Map<String, dynamic>> featureSets;
+
+  PropertyDetailPage({required this.featureSets});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Property Details'),
+        backgroundColor: Colors.blue, // Customize as needed
+      ),
+      body: ListView.builder(
+        itemCount: featureSets.length,
+        itemBuilder: (context, index) {
+          String featureName = featureSets[index]['name'];
+          dynamic featureValue = featureSets[index]['value'];
+
+          // Define colors for each feature card
+          Color cardColor = index % 2 == 0 ? Colors.grey[200]! : Colors.white;
+
+          return Card(
+            elevation: 4,
+            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            color: cardColor,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: ListTile(
+                title: Text(
+                  '$featureName',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text('$featureValue'),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
 
 class AssessorPage extends StatefulWidget {
   @override
@@ -75,119 +105,202 @@ class _AssessorPageState extends State<AssessorPage> {
               builder: (controller) => ListView.builder(
                 itemCount: controller.propertyModel.length,
                 itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 4,
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-///////////////////////////////////////////======>>>>>>>>>>>>>>>>
-                          Text(
-                              'Location: ${controller.propertyModel[index].locationn}'),
-                          Text(
-                              'Area Range: ${controller.propertyModel[index].area}'),
-                          Text(
-                              'Bedrooms: ${controller.propertyModel[index].noOfRooms}'),
-                          Text(
-                              'Baths: ${controller.propertyModel[index].noOfBaths}'),
-                          Text(
-                              'Price: \$${controller.propertyModel[index].price}'),
-                          const SizedBox(height: 8),
-                          SizedBox(
-                            height: 100,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: controller.propertyModel.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: Image.asset('assets/hotel_2.png'));
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  controller.userEmail =
-                                      controller.propertyModel[index].userEmail;
-                                  controller.userPhone =
-                                      controller.propertyModel[index].userPhone;
-                                  controller.locationn =
-                                      controller.propertyModel[index].locationn;
-                                  controller.area =
-                                      controller.propertyModel[index].area;
-                                  controller.amenty =
-                                      controller.propertyModel[index].amenty;
-                                  controller.description = controller
-                                      .propertyModel[index].description;
-                                  controller.downPayment = controller
-                                      .propertyModel[index].downPayment;
-                                  controller.installmentValue = controller
-                                      .propertyModel[index].installmentValue;
-                                  controller.type =
-                                      controller.propertyModel[index].type;
-                                  controller.noOfRooms =
-                                      controller.propertyModel[index].noOfRooms;
-                                  controller.noOfBaths =
-                                      controller.propertyModel[index].noOfBaths;
-                                  controller.price =
-                                      controller.propertyModel[index].price;
-                                  controller.paymentType = controller
-                                      .propertyModel[index].paymentType;
-                                  controller.addProperty();
-                                  setState(() {
-                                    controller.propertyModel.remove(
-                                        controller.propertyModel[index]);
-                                  });
+                  return GestureDetector(
+                    onTap: () {
+                      List<Map<String, dynamic>> featureSets = [
+                        {
+                          'name': 'No. of Rooms',
+                          'value': controller.propertyModel[index].noOfRooms
+                        },
+                        {
+                          'name': 'No. of Baths',
+                          'value': controller.propertyModel[index].noOfBaths
+                        },
+                        {
+                          'name': 'Sqft Living',
+                          'value': controller.propertyModel[index].sqftLiving
+                        },
+                        {
+                          'name': 'Sqft Lot',
+                          'value': controller.propertyModel[index].sqftLot
+                        },
+                        {
+                          'name': 'Floors',
+                          'value': controller.propertyModel[index].floors
+                        },
+                        {
+                          'name': 'Waterfront',
+                          'value': controller.propertyModel[index].waterFront
+                        },
+                        {
+                          'name': 'View',
+                          'value': controller.propertyModel[index].view
+                        },
+                        {
+                          'name': 'Conditions',
+                          'value': controller.propertyModel[index].conditions
+                        },
+                        {
+                          'name': 'Grade',
+                          'value': controller.propertyModel[index].grade
+                        },
+                        {
+                          'name': 'Sqft Above',
+                          'value': controller.propertyModel[index].sqftAbov
+                        },
+                        {
+                          'name': 'Year Built',
+                          'value': controller.propertyModel[index].yrBuild
+                        },
+                        {
+                          'name': 'Zipcode',
+                          'value': controller.propertyModel[index].zipcode
+                        },
+                        {
+                          'name': 'Latitude',
+                          'value': controller.propertyModel[index].lat
+                        },
+                        {
+                          'name': 'Longitude',
+                          'value': controller.propertyModel[index].long
+                        },
+                        {
+                          'name': 'Sqft Living 15',
+                          'value': controller.propertyModel[index].sqftLiving15
+                        },
+                        {
+                          'name': 'Sqft Lot 15',
+                          'value': controller.propertyModel[index].sqftLot15
+                        },
+                      ];
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PropertyDetailPage(featureSets: featureSets),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      elevation: 4,
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                'Location: ${controller.propertyModel[index].locationn}'),
+                            Text(
+                                'Area Range: ${controller.propertyModel[index].area}'),
+                            Text(
+                                'Bedrooms: ${controller.propertyModel[index].noOfRooms}'),
+                            Text(
+                                'Baths: ${controller.propertyModel[index].noOfBaths}'),
+                            Text(
+                                'Price: \$${controller.propertyModel[index].price}'),
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              height: 100,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: controller.propertyModel.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: Image.asset('assets/hotel_2.png'));
                                 },
-                                child: const Text('Approve'),
                               ),
-                              const SizedBox(width: 8),
-                              OutlinedButton(
-                                onPressed: () {},
-                                child: const Text('Reject'),
-                              ),
-                              ElevatedButton(
-                                  onPressed: () async {
-                                    final List<dynamic> featureSets = [
-                                      controller.propertyModel[index].noOfRooms,
-                                      controller.propertyModel[index].noOfBaths,
-                                      controller
-                                          .propertyModel[index].sqftLiving,
-                                      controller.propertyModel[index].sqftLot,
-                                      controller.propertyModel[index].floors,
-                                      controller
-                                          .propertyModel[index].waterFront,
-                                      controller.propertyModel[index].view,
-                                      controller
-                                          .propertyModel[index].conditions,
-                                      controller.propertyModel[index].grade,
-                                      controller.propertyModel[index].sqftAbov,
-                                      controller.propertyModel[index].yrBuild,
-                                      controller.propertyModel[index].zipcode,
-                                      controller.propertyModel[index].lat,
-                                      controller.propertyModel[index].long,
-                                      controller
-                                          .propertyModel[index].sqftLiving15,
-                                      controller.propertyModel[index].sqftLot15
-                                    ];
-                                    print(featureSets);
-                                    sendDataToApi(context, featureSets);
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    controller.userEmail = controller
+                                        .propertyModel[index].userEmail;
+                                    controller.userPhone = controller
+                                        .propertyModel[index].userPhone;
+                                    controller.locationn = controller
+                                        .propertyModel[index].locationn;
+                                    controller.area =
+                                        controller.propertyModel[index].area;
+                                    controller.amenty =
+                                        controller.propertyModel[index].amenty;
+                                    controller.description = controller
+                                        .propertyModel[index].description;
+                                    controller.downPayment = controller
+                                        .propertyModel[index].downPayment;
+                                    controller.installmentValue = controller
+                                        .propertyModel[index].installmentValue;
+                                    controller.type =
+                                        controller.propertyModel[index].type;
+                                    controller.noOfRooms = controller
+                                        .propertyModel[index].noOfRooms;
+                                    controller.noOfBaths = controller
+                                        .propertyModel[index].noOfBaths;
+                                    controller.price =
+                                        controller.propertyModel[index].price;
+                                    controller.paymentType = controller
+                                        .propertyModel[index].paymentType;
+                                    controller.addProperty();
                                     setState(() {
-                                      index = index + 1;
+                                      controller.propertyModel.remove(
+                                          controller.propertyModel[index]);
                                     });
-                                    print(index);
                                   },
-                                  child: const Text('Asses'))
-                            ],
-                          ),
-                        ],
+                                  child: const Text('Approve'),
+                                ),
+                                const SizedBox(width: 8),
+                                OutlinedButton(
+                                  onPressed: () {},
+                                  child: const Text('Reject'),
+                                ),
+                                ElevatedButton(
+                                    onPressed: () async {
+                                      // Get the feature sets for the current property
+                                      final List<dynamic> featureSets = [
+                                        controller
+                                            .propertyModel[index].noOfRooms,
+                                        controller
+                                            .propertyModel[index].noOfBaths,
+                                        controller
+                                            .propertyModel[index].sqftLiving,
+                                        controller.propertyModel[index].sqftLot,
+                                        controller.propertyModel[index].floors,
+                                        controller
+                                            .propertyModel[index].waterFront,
+                                        controller.propertyModel[index].view,
+                                        controller
+                                            .propertyModel[index].conditions,
+                                        controller.propertyModel[index].grade,
+                                        controller
+                                            .propertyModel[index].sqftAbov,
+                                        controller.propertyModel[index].yrBuild,
+                                        controller.propertyModel[index].zipcode,
+                                        controller.propertyModel[index].lat,
+                                        controller.propertyModel[index].long,
+                                        controller
+                                            .propertyModel[index].sqftLiving15,
+                                        controller
+                                            .propertyModel[index].sqftLot15
+                                      ];
+                                      print(featureSets);
+                                      // Send the feature sets to the API
+                                      sendDataToApi(context, featureSets);
+                                      setState(() {
+                                        index = index + 1;
+                                      });
+                                      print(index);
+                                    },
+                                    child: const Text('Asses'))
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -227,13 +340,11 @@ class _AssessorPageState extends State<AssessorPage> {
         int num = 0;
         // Use the regular expression to find the first match
         Iterable<Match> matches = regExp.allMatches(content);
-
         if (matches.isNotEmpty) {
           // Get the first match
           String numberString = matches.first.group(0)!;
           // Convert the extracted string to a number (double in this case)
           double number = double.parse(numberString);
-
           // Print the result
           num = number.toInt();
         }
